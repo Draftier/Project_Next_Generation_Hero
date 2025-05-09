@@ -29,7 +29,7 @@ public class PlaneManager : MonoBehaviour
 
     public void UpdateScore()
     {
-        TextMeshPro.text = "HERO: Driver(" + PlayerMovement.driveMode + ") TouchedEnemy(" + Enemy.TouchedEnemy   
+        TextMeshPro.text = "WAYPOINTS: (" + Enemy.waypointMode + ") HERO: Driver(" + PlayerMovement.driveMode + ") TouchedEnemy(" + Enemy.TouchedEnemy   
         + ") EGG OnScreen(" + Projectile.projectileCount + ") ENEMY: Count(" + Enemy.enemyCount + ")" + " Destroyed(" + Enemy.destroyed + ")";
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created

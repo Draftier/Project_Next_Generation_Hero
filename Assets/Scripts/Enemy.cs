@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -15,6 +16,12 @@ public class Enemy : MonoBehaviour
     public Color spriteColor;
     public GameObject player;
 
+    public WayPointManager wayPointManager;
+    private int currentWaypoint = 0;
+
+    public static bool sequential = true;
+    public static string waypointMode = "Sequential";
+
     private void Awake()
     {
         hitCount = 0;
@@ -28,16 +35,23 @@ public class Enemy : MonoBehaviour
     }
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         spriteColor = spriteRenderer.color;
+        wayPointManager = Object.FindFirstObjectByType<WayPointManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        MoveTowardsWaypoint();
+        if(sequential == true)
+        {
+            waypointMode = "Sequential";
+        }
+        else
+        {
+            waypointMode = "Random";
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -48,7 +62,7 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
             TouchedEnemy++;
         }
-        else if(other.CompareTag("Bullet"))
+        else if (other.CompareTag("Bullet"))
         {
             TakeDamage();
         }
@@ -57,36 +71,54 @@ public class Enemy : MonoBehaviour
     public void TakeDamage()
     {
         hitCount++;
-        // health -= damage;
-        // switch(health)
-        // {
-        //     case 80:
-        //         spriteColor.a = 0.8f;
-        //         spriteRenderer.color = spriteColor;
-        //         break;
-        //     case 60:
-        //         spriteColor.a = 0.6f;
-        //         spriteRenderer.color = spriteColor;
-        //         break;
-        //     case 40:
-        //         spriteColor.a = 0.4f;
-        //         spriteRenderer.color = spriteColor;
-        //         break;
-        //     case 20:
-        //         spriteColor.a = 0.2f;
-        //         spriteRenderer.color = spriteColor;
-        //         break;
-        //     case 0:
-        //         spriteColor.a = 0f;
-        //         Destroy(gameObject);
-        //         break;
-
-        // }
-        if(hitCount == 4)
+        health *= 0.8f;
+        if (hitCount == 4)
         {
             Destroy(gameObject);
         }
         spriteColor.a *= 0.8f;
         spriteRenderer.color = spriteColor;
+    }
+
+    private void MoveTowardsWaypoint()
+    {
+        
+        Vector2 targetPosition = wayPointManager.GetCurrentWayPoint(currentWaypoint);
+
+        
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+
+       
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f; 
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+
+        
+        float rotationSpeed = 120f; 
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+        float speed = 25f; 
+        transform.position += transform.up * speed * Time.deltaTime;
+
+        if (Vector2.Distance(transform.position, targetPosition) <= 30f)
+        {
+            if (sequential == true)
+            {
+                currentWaypoint++;
+                if (currentWaypoint >= wayPointManager.waypoints.Length)
+                {
+                    currentWaypoint = 0;
+                }
+            }
+            else
+            {
+                int genIndex = Random.Range(0, wayPointManager.waypoints.Length);
+                while (genIndex == currentWaypoint)
+                {
+                    genIndex = Random.Range(0, wayPointManager.waypoints.Length);
+                }
+                currentWaypoint = genIndex;
+            }
+        }
+
     }
 }
