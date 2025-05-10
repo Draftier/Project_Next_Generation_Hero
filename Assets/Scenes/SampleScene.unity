@@ -1378,7 +1378,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'WAYPOINTS: (Sequence)  Hero: Drive(Mouse) TouchedEnemy(0) EGG: OnScreen(0)  
-    ENEMY: Count(10) Destroyed(0)'
+    ENEMY: Count(10) Destroyed(0) Waypoints Visibility (Visible)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
