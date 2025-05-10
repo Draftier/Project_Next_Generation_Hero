@@ -28,8 +28,6 @@ public class PlayerMovement : MonoBehaviour
     // Store the image for the left cooldown bar and right cooldown bar
     public Image leftBar;
     public Image rightBar;
-    // Stores whether or not player interrupted initial speed
-    private bool initialMovement = false;
 
     // Store the current charge of the cooldown bar
     float charge = 0f;
